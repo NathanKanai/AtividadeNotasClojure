@@ -1,0 +1,37 @@
+(defn classificar-conceito [nota]
+  (cond
+    (>= nota 90) "A"
+    (>= nota 80) "B"
+    (>= nota 70) "C"
+    (>= nota 60) "D"
+    :else "F"))
+
+(defn desempenho-geral [media]
+  (cond
+    (>= media 80) "Turma excelente!"
+    (>= media 60) "Bom desempenho!"
+    :else "É necessário melhorar!"))
+
+(defn sistema-de-notas []
+  (println "Quantos alunos na turma?")
+  (let [qtd-alunos (read-line)
+        qtd-alunos (Integer/parseInt qtd-alunos)
+        alunos (loop [i 1
+                      dados []]
+                 (if (<= i qtd-alunos)
+                   (do
+                     (println (str "Nome do aluno " i ":"))
+                     (let [nome (read-line)
+                           _ (println "Nota:")
+                           nota (Integer/parseInt (read-line))
+                           conceito (classificar-conceito nota)]
+                       (println (str nome " - Conceito: " conceito))
+                       (recur (inc i) (conj dados {:nome nome :nota nota :conceito conceito})))
+                   dados))]
+    (let [media (double (/ (reduce + (map :nota alunos)) qtd-alunos))
+          aprovados (count (filter #(>= (:nota %) 60) alunos))]
+      (println (str "Média da turma: " media))
+      (println (str "Aprovados: " aprovados))
+      (println (str "Desempenho geral: " (desempenho-geral media))))))
+
+(sistema-de-notas)
